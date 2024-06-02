@@ -1,6 +1,11 @@
 # MAX7219-Clock
-Это форк часов Марселя Ахкамова (V4).
-Включая все недостающие библиотеки (папка libraries).
-Поправлены Parola и Json в связи с выходом новых версий.
-Собрано в IDE 1.8.5.
-Оригинал ищем тут https://vk.com/arduino_nodemcu_esp8266.
+
+This is a fork of Marcel Akhkamov's clock (V4).
+
+Including all missing libraries (libraries folder).
+
+Parola and Json have been corrected due to the release of new versions.
+
+Compiled in IDE 1.8.5.
+
+Looking for the original here https://vk.com/arduino_nodemcu_esp8266. **Note in Russian!**
