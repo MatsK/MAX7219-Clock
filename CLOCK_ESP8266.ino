@@ -1,7 +1,7 @@
 /*
 
-
 */
+
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
@@ -62,15 +62,12 @@ sCatalog  catalog[] =
   { PA_GROW_DOWN, "GRW_D", 7, 1 },
 };
 
-
-
 Timer t;
 
 #include "global.h"
 #include "NTP.h"
 
 // Include the HTML, STYLE and Script "Pages"
-
 #include "Page_Admin.h"
 #include "Page_Script.js.h"
 #include "Page_Style.css.h"
@@ -80,19 +77,15 @@ Timer t;
 #include "Page_NetworkConfiguration.h"
 
 
-
 extern "C" {
 #include "user_interface.h"
 }
 
 Ticker ticker;
 
-
 os_timer_t myTimer;
 
-
 //*** Normal code definition here ...
-
 #define LED_PIN 2
 #define buttonPin 0
 
@@ -105,13 +98,13 @@ String ipstring;
 String Text;
 char buf[256];
 
-String y;     // год
-String mon;   // месяц
-String wd;    // день недели
-String d;     // дени
-String h;     // часоы
-String m;     // минуты
-String s;     // секунды
+String y;     // Year
+String mon;   // Month
+String wd;    // Weekday
+String d;     // Day
+String h;     // Hour
+String m;     // Minute
+String s;     // Second
 
 int disp = 0;
 int rnd;
@@ -119,7 +112,6 @@ int lp = 0;
 
 unsigned long eventTime = 0;
 int buttonstate = 1;
-
 
 String weatherMain = "";
 String weatherDescription = "";
@@ -162,15 +154,13 @@ void setup() {
   digitalWrite(LED_PIN, HIGH);
 
   //**** Network Config load
-  EEPROM.begin(512); // define an EEPROM space of 512Bytes to store data
-
+  EEPROM.begin(512);            // Define an EEPROM space of 512Bytes to store data
   CFG_saved = ReadConfig();
 
   //  Connect to WiFi acess point or start as Acess point
-  if (CFG_saved)  //if no configuration yet saved, load defaults
+  if (CFG_saved)                // If no configuration yet saved, load defaults
   {
-    // Connect the ESP8266 to local WIFI network in Station mode
-    Serial.println("Booting");
+    Serial.println("Booting");  // Connect the ESP8266 to local WIFI network in Station mode
 
     WiFi.mode(WIFI_STA);
 
@@ -182,14 +172,10 @@ void setup() {
     printConfig();
     WIFI_connected = WiFi.waitForConnectResult();
 
-
-
-
     if (WIFI_connected != WL_CONNECTED ) {
       Serial.println("Connection Failed! activating to AP mode...");
       Serial.print("Wifi ip:"); Serial.println(WiFi.localIP());
       Serial.print("Email:"); Serial.println(config.cityid.c_str());
-
     }
   }
 
@@ -197,8 +183,8 @@ void setup() {
     // DEFAULT CONFIG
     scrollConnect();
     Serial.println("Setting AP mode default parameters");
-    config.ssid = "UFA Iot";       // SSID of access point
-    config.password = "" ;   // password of access point
+    config.ssid = "UFA Iot";    // SSID of access point
+    config.password = "" ;      // Password of access point
     config.dhcp = true;
     config.IP[0] = 192; config.IP[1] = 168; config.IP[2] = 1; config.IP[3] = 100;
     config.Netmask[0] = 255; config.Netmask[1] = 255; config.Netmask[2] = 255; config.Netmask[3] = 0;
@@ -213,9 +199,7 @@ void setup() {
     WiFi.mode(WIFI_AP);
     WiFi.softAP(config.ssid.c_str());
     Serial.print("Wifi ip:"); Serial.println(WiFi.softAPIP());
-
   }
-
 
   // Start HTTP Server for configuration
   server.on ( "/", []() {
@@ -284,34 +268,24 @@ void setup() {
   /* setup the OTA server */
   ArduinoOTA.begin();
   Serial.println("Ready");
-  for (int i = 0; i < 3; i++) { // Bling the LED to show the program started
+  for (int i = 0; i < 3; i++) {    // Bling the LED to show the program started
     digitalWrite(LED_PIN, LOW);
     delay(200);
     digitalWrite(LED_PIN, HIGH);
     delay(200);
   }
 
-
   // start internal time update ISR
   //    tkSecond.attach(1, ISRsecondTick);
 
-
   //**** Normal Sketch code here...
-
-
-
-
-
   ipstring = (
                String(WiFi.localIP()[0]) + "." +
                String(WiFi.localIP()[1]) + "." +
                String(WiFi.localIP()[2]) + "." +
                String(WiFi.localIP()[3])
              );
-
-
   {
-
 
     for (uint8_t i = 0; i < ARRAY_SIZE(catalog); i++)
     {
@@ -336,17 +310,11 @@ void setup() {
   cityID = config.cityid.c_str();
 }
 
-// the loop function runs over and over again forever
+
 void loop() {
-
-  // OTA request handling
-  ArduinoOTA.handle();
-
-  //  WebServer requests handling
-  server.handleClient();
-
-  //  feed de DOG :)
-  customWatchdog = millis();
+  ArduinoOTA.handle();        // OTA request handling
+  server.handleClient();      //  WebServer requests handling
+  customWatchdog = millis();  //  feed de DOG :)
 
   //**** Normal Skecth code here ...
   t.update();
@@ -395,12 +363,12 @@ void loop() {
     scrollText2();
   }
 
-  //============длительное нажатие кнопки форматирует EEPROM
+  //============ Press the button for a long time to formats the EEPROM
   int buttonstate = digitalRead(buttonPin);
   if (buttonstate == HIGH) eventTime = millis();
-  if (millis() - eventTime > 5000) { // при нажатии 15 секунд -
+  if (millis() - eventTime > 5000) {  // When pressed for 15 seconds -
     digitalWrite(16, LOW);
-    ResetAll();                 // форматируем EEPROM
+    ResetAll();                       // Format EEPROM
     Serial.println("EEPROM formatted");
     ESP.restart();
   }
@@ -408,13 +376,12 @@ void loop() {
   {
     digitalWrite(16, HIGH);
   }
-
-  //============длительное нажатие кнопки форматирует EEPROM
 }
+
 
 void ResetAll() {
   EEPROM.begin(512);
-  // write a 0 to all 512 bytes of the EEPROM
+  // Write a 0 to all 512 bytes of the EEPROM
   for (int i = 0; i < 512; i++) {
     EEPROM.write(i, 0);
   }
@@ -422,40 +389,39 @@ void ResetAll() {
   ESP.reset();
 }
 
-//==========================================================
+
 void getTime() {
   getNTPtime();
   h = String (DateTime.hour / 10) + String (DateTime.hour % 10);
   m = String (DateTime.minute / 10) + String (DateTime.minute % 10);
   s = String (DateTime.second / 10 + String (DateTime.second % 10));
-
   d = String (DateTime.day);
-
   y = String (DateTime.year);
 
-  if (DateTime.month == 1) mon = "Января";
-  if (DateTime.month == 2) mon = "Февраля";
-  if (DateTime.month == 3) mon = "Марта";
-  if (DateTime.month == 4) mon = "Апреля";
-  if (DateTime.month == 5) mon = "Мая";
-  if (DateTime.month == 6) mon = "Июня";
-  if (DateTime.month == 7) mon = "Июля";
-  if (DateTime.month == 8) mon = "Августа";
-  if (DateTime.month == 9) mon = "Сентября";
-  if (DateTime.month == 10) mon = "Октября";
-  if (DateTime.month == 11) mon = "Ноября";
-  if (DateTime.month == 12) mon = "Декабря";
+  if (DateTime.month == 1) mon = "January";
+  if (DateTime.month == 2) mon = "February";
+  if (DateTime.month == 3) mon = "Маrs";
+  if (DateTime.month == 4) mon = "Аpril";
+  if (DateTime.month == 5) mon = "Мay";
+  if (DateTime.month == 6) mon = "June";
+  if (DateTime.month == 7) mon = "July";
+  if (DateTime.month == 8) mon = "Аugust";
+  if (DateTime.month == 9) mon = "September";
+  if (DateTime.month == 10) mon = "October";
+  if (DateTime.month == 11) mon = "November";
+  if (DateTime.month == 12) mon = "December";
 
-  if (DateTime.wday == 2) wd = "Понедельник";
-  if (DateTime.wday == 3) wd = "Вторник";
-  if (DateTime.wday == 4) wd = "Среда";
-  if (DateTime.wday == 5) wd = "Четверг";
-  if (DateTime.wday == 6) wd = "Пятница";
-  if (DateTime.wday == 7) wd = "Суббота";
-  if (DateTime.wday == 1) wd = "Воскресенье";
+  if (DateTime.wday == 2) wd = "Monday";
+  if (DateTime.wday == 3) wd = "Tuesday";
+  if (DateTime.wday == 4) wd = "Wednesday";
+  if (DateTime.wday == 5) wd = "Thursday";
+  if (DateTime.wday == 6) wd = "Friday";
+  if (DateTime.wday == 7) wd = "Saturday";
+  if (DateTime.wday == 1) wd = "Sunday";
 
 }
-//==========================================================
+
+
 void displayInfo() {
   if (P.displayAnimate()) {
     utf8rus(Text).toCharArray(buf, 256);
@@ -463,7 +429,8 @@ void displayInfo() {
     if (!P.displayAnimate()) disp = 2;
   }
 }
-//==========================================================
+
+
 void displayInfo1() {
   if (P.displayAnimate()) {
     utf8rus(Text).toCharArray(buf, 256);
@@ -471,7 +438,8 @@ void displayInfo1() {
     if (!P.displayAnimate()) disp = 4;
   }
 }
-//==========================================================
+
+
 void displayInfo2() {
   if (P.displayAnimate()) {
     utf8rus(Text).toCharArray(buf, 256);
@@ -479,7 +447,8 @@ void displayInfo2() {
     if (!P.displayAnimate()) disp = 6;
   }
 }
-//==========================================================
+
+
 void displayInfo3() {
   if (P.displayAnimate()) {
     utf8rus(Text).toCharArray(buf, 256);
@@ -487,7 +456,8 @@ void displayInfo3() {
     if (!P.displayAnimate()) disp = 0;
   }
 }
-//==========================================================
+
+
 void scrollText() {
   if  (P.displayAnimate()) {
     utf8rus(Text).toCharArray(buf, 256);
@@ -495,7 +465,8 @@ void scrollText() {
     if (!P.displayAnimate()) disp = 3;
   }
 }
-//==========================================================
+
+
 void scrollText1() {
   if  (P.displayAnimate()) {
     utf8rus(Text).toCharArray(buf, 256);
@@ -503,7 +474,8 @@ void scrollText1() {
     if (!P.displayAnimate()) disp = 5;
   }
 }
-//==========================================================
+
+
 void scrollText2() {
   if  (P.displayAnimate()) {
     utf8rus(Text).toCharArray(buf, 256);
@@ -511,7 +483,8 @@ void scrollText2() {
     if (!P.displayAnimate()) disp = 0;
   }
 }
-//==========================================================
+
+
 void scrollText3() {
   if  (P.displayAnimate()) {
     utf8rus(Text).toCharArray(buf, 256);
@@ -521,20 +494,17 @@ void scrollText3() {
 }
 
 
-
-//==========================================================
 void scrollIP() {
-
-  Text = "Ваш IP: " + ipstring;
+  Text = "IP: " + ipstring;
   if  (P.displayAnimate()) {
     utf8rus(Text).toCharArray(buf, 256);
     P.displayScroll(buf, PA_LEFT, PA_SCROLL_LEFT, 60);
   }
-
 }
-//==========================================================
+
+
 void scrollConnect() {
-  Text = "Отсутствует подключение к WIFI. Подключитесь к точке доступа 'UFA Iot' и войдите в веб интерфейс 192.168.4.1" ;
+  Text = "There is no WIFI connection. Connect to the 'UFA Iot' access point and log into the web interface192.168.4.1" ;
   if  (P.displayAnimate()) {
     utf8rus(Text).toCharArray(buf, 256);
     P.displayScroll(buf, PA_LEFT, PA_SCROLL_LEFT, 40);
@@ -543,16 +513,11 @@ void scrollConnect() {
 }
 
 // =======================================================================
-// Берем погоду с сайта openweathermap.org
+// We take the weather from the site openweathermap.org
 // =======================================================================
-
-
 #include <Netwf.h>
-
 NF nsys;
-
 const char *weatherHostz = "api.openweathermap.org";
-
 
 void getWeatherData()
 {
@@ -615,10 +580,10 @@ void getWeatherData()
   Serial.println("Now: " + weatherString);
 }
 
-// =======================================================================
-// Берем ПРОГНОЗ!!! погоды с сайта openweathermap.org
-// =======================================================================
 
+// =======================================================================
+// Let's get a weather forecast from openweathermap.org
+// =======================================================================
 void getWeatherDataz()
 {
   String out = "No connect to network";
@@ -679,7 +644,7 @@ void getWeatherDataz()
   weatherStringz1 = "Ветер " + windDegString + " " + String(windSpeed, 0) + " м/с";
 }
 
-// =======================================================================
+
 String tvoday(String line) {
   String s;
   int strt = line.indexOf('}');
@@ -690,7 +655,7 @@ String tvoday(String line) {
   return s;
 }
 
-// =======================================================================
+
 String fwindDegString(uint16_t _wDeg)
 {
   String _windDegString_;
@@ -704,7 +669,7 @@ String fwindDegString(uint16_t _wDeg)
   if (_wDeg >= 299 && _wDeg <= 344) _windDegString_ = "Северо-западный";
   return _windDegString_;
 }
-// =======================================================================
+
 
 String utf8rus(String source)
 {
