@@ -15,21 +15,21 @@ const char PAGE_Information[] PROGMEM = R"=====(
 <table border="0"  cellspacing="0" cellpadding="3" style="width:310px" >
 <tr><td align="right">SSID :</td><td><span id="x_ssid"></span></td></tr>
 <tr><td align="right">IP :</td><td><span id="x_ip"></span></td></tr>
-<tr><td align="right">Подсеть :</td><td><span id="x_netmask"></span></td></tr>
-<tr><td align="right">Шлюз :</td><td><span id="x_gateway"></span></td></tr>
-<tr><td align="right">Mac :</td><td><span id="x_mac"></span></td></tr>
+<tr><td align="right">Subnetmask :</td><td><span id="x_netmask"></span></td></tr>
+<tr><td align="right">Gateway :</td><td><span id="x_gateway"></span></td></tr>
+<tr><td align="right">MAC :</td><td><span id="x_mac"></span></td></tr>
 
-
-
-<tr><td colspan="2" align="center"><a href="javascript:GetState()" class="btn btn--m btn--blue">Обновить</a></td></tr>
+<tr><td colspan="2" align="center"><a href="javascript:GetState()" class="btn btn--m btn--blue">Update</a></td></tr>
 </table>
 <br>
-<td align="center">Разработчик: Марсель Ахкамов</td><br>
+<td align="center">Developer: Марсель Ахкамов</td><br>
 <td align="center">  danubanan@gmail.com</td><br>
 <td align="center">  musa.pro@yandex.ru</td><br>
 <a href="http://vk.com/danubanan" align="center" target="_blank">vk.com/danubanan</a><br>
-<script>
+<td align="center">Translated: Mats Karlsson</td><br>
+<td align="center">  https://github.com/MatsK/MAX7219-Clock</td><br>
 
+<script>
 function GetState()
 {
   setValues("/admin/infovalues");
@@ -46,17 +46,11 @@ window.onload = function ()
   });
 }
 function load(e,t,n){if("js"==t){var a=document.createElement("script");a.src=e,a.type="text/javascript",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)}else if("css"==t){var a=document.createElement("link");a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)}}
-
-
-
 </script>
 )=====" ;
 
 
-//
-// FILL WITH INFOMATION
-// 
-
+// FILL WITH INFORMATION
 void send_information_values_html ()
 {
 
@@ -71,6 +65,5 @@ void send_information_values_html ()
   Serial.println(__FUNCTION__); 
   AdminTimeOutCounter=0;
 }
-
 
 #endif
