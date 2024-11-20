@@ -1,14 +1,13 @@
-
 const char PAGE_NTPConfiguration[] PROGMEM = R"=====(
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<a href="/"  class="btn btn--s"><</a>&nbsp;&nbsp;<strong>Настройки NTP</strong>
+<a href="/"  class="btn btn--s"><</a>&nbsp;&nbsp;<strong>NTP settings</strong>
 <hr>
 <form action="" method="get">
 <table border="0"  cellspacing="0" cellpadding="3" >
-<tr><td align="right">NTP сервер:</td><td><input type="text" id="ntpserver" name="ntpserver" maxlength="172" value=""></td></tr>
-<tr><td align="right">Обновлять каждые:</td><td><input type="text" id="update" name="update" size="3"maxlength="6" value=""> минут (0=запрет)</td></tr>
-<tr><td>Час. пояс</td><td>
+<tr><td align="right">NTP server:</td><td><input type="text" id="ntpserver" name="ntpserver" maxlength="172" value=""></td></tr>
+<tr><td align="right">Update every:</td><td><input type="text" id="update" name="update" size="3"maxlength="6" value=""> minutes (0=disabled)</td></tr>
+<tr><td>Time zone</td><td>
 <select  id="tz" name="tz">
   <option value="-120">(GMT-12:00)</option>
   <option value="-110">(GMT-11:00)</option>
@@ -46,18 +45,19 @@ const char PAGE_NTPConfiguration[] PROGMEM = R"=====(
   <option value="130">(GMT+13:00)</option>
 </select>
 </td></tr>
-<tr><td align="right">Летнее время:</td><td><input type="checkbox" id="dst" name="dst"></td></tr>
-<tr><td colspan="2" align="center"><input type="submit" style="width:150px" class="btn btn--m btn--blue" value="Сохранить"></td></tr>
+<tr><td align="right">Summer time:</td><td><input type="checkbox" id="dst" name="dst"></td></tr>
+<tr><td colspan="2" align="center"><input type="submit" style="width:150px" class="btn btn--m btn--blue" value="Save"></td></tr>
 </table>
 </form>
 <br>
-<td align="center">Разработчик: Марсель Ахкамов</td><br>
+<td align="center">Developer: Марсель Ахкамов</td><br>
 <td align="center">  danubanan@gmail.com</td><br>
 <td align="center">  musa.pro@yandex.ru</td><br>
 <a href="http://vk.com/danubanan" align="center" target="_blank">vk.com/danubanan</a><br>
-<script>
-  
+<td align="center">Translated: Mats Karlsson</td><br>
+<td align="center">  https://github.com/MatsK/MAX7219-Clock/td><br>
 
+<script>
 window.onload = function ()
 {
   load("style.css","css", function() 
@@ -69,9 +69,6 @@ window.onload = function ()
   });
 }
 function load(e,t,n){if("js"==t){var a=document.createElement("script");a.src=e,a.type="text/javascript",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)}else if("css"==t){var a=document.createElement("link");a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)}}
-
-
-
 </script>
 )=====";
 
@@ -94,14 +91,11 @@ void send_NTP_configuration_html()
   }
   server.send_P ( 200, "text/html", PAGE_NTPConfiguration ); 
   Serial.println(__FUNCTION__); 
-  
 }
-
 
 
 void send_NTP_configuration_values_html()
 {
-    
   String values ="";
   values += "ntpserver|" + (String) config.ntpServerName + "|input\n";
   values += "update|" +  (String) config.Update_Time_Via_NTP_Every + "|input\n";
